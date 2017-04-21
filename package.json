@@ -201,6 +201,27 @@
       "title": "Show an extra row of Top Sites on the New Tab page",
       "type": "bool",
       "value": false
+    },
+    {
+      "name": "pocket.stories.endpoint",
+      "title": "Pocket trending stories endpoint",
+      "type": "string",
+      "value": "https://getpocket.com/v3/firefox/global-recs",
+      "hidden": true
+    },
+    {
+      "name": "pocket.topics.endpoint",
+      "title": "Pocket trending topics endpoint",
+      "type": "string",
+      "value": "https://getpocket.com/v3/firefox/trending-topics",
+      "hidden": true
+    },
+    {
+      "name": "pocket.readmore.endpoint",
+      "title": "Pocket read more endpoint",
+      "type": "string",
+      "value": "https://getpocket.com/explore/trending?src=ff_new_tab",
+      "hidden": true
     }
   ],
   "repository": "mozilla/activity-stream",
@@ -208,10 +229,9 @@
     "once": "npm run bundle && npm run firefox",
     "clean": "rimraf data/content/* && rimraf data/locales/* && mkdirp data/content && rimraf dist/*",
     "changelog": "conventional-changelog -i CHANGELOG.md -s",
-    "copyTestImages": "cpx \"node_modules/tippy-top-sites/images/**/*\" data/content/favicons/images",
-    "preparePocketJson": "node ./bin/pocket-config.js",
+    "copyTestImages": "cpx \"node_modules/tippy-top-sites/images/**/*\" data/content/favicons/image",
     "bundle": "npm-run-all bundle:*",
-    "prebundle": "npm run clean && npm run copyTestImages && npm run preparePocketJson",
+    "prebundle": "npm run clean && npm run copyTestImages",
     "bundle:static": "cpx \"content-src/static/**/*\" data/content",
     "bundle:locales": "pontoon-to-json --src locales --dest data/locales",
     "bundle:svgo": "svgo -q -f data/content/img/",
@@ -246,7 +266,7 @@
     "posttestmc": "cat logs/coverage/system-addon/text-summary.txt",
     "tddmc": "karma start karma.mc.config.js --tdd",
     "start": "npm-run-all --parallel start:*",
-    "prestart": "npm run clean && npm run copyTestImages && npm run preparePocketJson",
+    "prestart": "npm run clean && npm run copyTestImages",
     "start:static": "npm run bundle:static -- -w",
     "start:locales": "npm run bundle:locales -- -w",
     "start:webpack": "webpack -w",
@@ -262,11 +282,11 @@
     "strings-export": "node ./bin/strings-export.js ../activity-stream-l10n",
     "strings-import": "node ./bin/strings-import.js ../activity-stream-l10n",
     "test": "npm-run-all test:*",
-    "pretest": "npm run bundle && npm run copyTestImages && npm run preparePocketJson",
+    "pretest": "npm run bundle && npm run copyTestImages",
     "test:lint": "npm run lint",
     "test:checkbinary": "echo \"JPM_FIREFOX_BINARY: ${JPM_FIREFOX_BINARY}\"",
     "test:jpm": "jpm test -b ${JPM_FIREFOX_BINARY:-\"nightly\"} --prefs ./test-prefs.json -v -f \"^(?!.*benchmark)\"",
-    "test:karma": "npm run preparePocketJson && NODE_ENV=test karma start",
+    "test:karma": "NODE_ENV=test karma start",
     "test:mc": "npm run testmc",
     "posttest": "cat logs/reports/coverage/text-summary.txt",
     "benchmark-with": "npm run bundle && JSGC_DISABLE_POISONING=1 jpm test -b ${JPM_FIREFOX_BINARY:-\"nightly\"} --prefs ./benchmark-prefs.json",

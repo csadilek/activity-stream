@@ -4,7 +4,7 @@ const {justDispatch} = require("common/selectors/selectors");
 const {FormattedMessage} = require("react-intl");
 const {SpotlightItem, renderPlaceholderList} = require("components/Spotlight/Spotlight");
 const {actions} = require("common/action-manager");
-const {pocket_read_more_endpoint} = require("../../../pocket.json");
+const simplePrefs = require("sdk/simple-prefs");
 
 const PocketStories = React.createClass({
   onClickFactory(index, story) {
@@ -44,7 +44,7 @@ const PocketStories = React.createClass({
       <div className="pocket-read-more">
         <span><FormattedMessage id="pocket_read_more" />:</span>
         {this.props.topics.map(t => this.renderReadMoreTopic(t.name, t.url))}
-        <a className="pocket-read-even-more" href={pocket_read_more_endpoint}>
+        <a className="pocket-read-even-more" href={simplePrefs.prefs["pocket.readmore.endpoint"]}>
           <FormattedMessage id="pocket_read_even_more" /> &gt;
         </a>
       </div>

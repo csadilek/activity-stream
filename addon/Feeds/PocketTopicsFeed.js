@@ -3,7 +3,6 @@ const {Cu} = require("chrome");
 const PocketFeed = require("./PocketFeed");
 const {POCKET_TOPICS_LENGTH} = require("common/constants");
 const am = require("common/action-manager");
-const {pocket_topic_endpoint, pocket_consumer_key} = require("../../pocket.json");
 
 Cu.import("resource://gre/modules/Task.jsm");
 
@@ -15,15 +14,9 @@ module.exports = class PocketTopicsFeed extends PocketFeed {
   }
 
   _fetchTopics() {
-    if (!pocket_topic_endpoint || !pocket_consumer_key) {
-      let err = "Pocket topic endpoint not configured: Make sure to add endpoint URL and " +
-        "API key to pocket.json (see pocket-example.json)";
-      console.log(err); // eslint-disable-line no-console
-      throw new Error(err);
-    }
-
-    let pocketUrl = `${pocket_topic_endpoint}?consumer_key=${pocket_consumer_key}`;
-    return this.fetch(pocketUrl).then(r => JSON.parse(r).topics.slice(0, POCKET_TOPICS_LENGTH));
+    return this
+      .fetch(this.getEndpoint("pocket.topics.endpoint"))
+      .then(r => JSON.parse(r).topics.slice(0, POCKET_TOPICS_LENGTH));
   }
 
   /**

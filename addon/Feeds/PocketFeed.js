@@ -2,12 +2,24 @@
 const Feed = require("addon/lib/Feed");
 const am = require("common/action-manager");
 const Request = require("sdk/request").Request;
+const simplePrefs = require("sdk/simple-prefs");
 
 module.exports = class PocketFeed extends Feed {
 
   constructor(options, updateTime) {
     super(options);
     this.updateTime = updateTime;
+  }
+
+  getEndpoint(prop) {
+    let pocketEndpoint = simplePrefs.prefs[prop];
+    if (!pocketEndpoint) {
+      let err = `Pocket stories endpoint not configured (missing value for ${prop})`;
+      console.log(err); // eslint-disable-line no-console
+      throw new Error(err);
+    }
+
+    return pocketEndpoint;
   }
 
   fetch(from) {

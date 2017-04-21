@@ -41,7 +41,7 @@ describe("PocketTopicsFeed", () => {
         });
     });
     it("should throw error if API key or endpoint not configured", () => {
-      let BrokenPocketTopicFeed = require("inject!addon/Feeds/PocketTopicsFeed")({"../../pocket.json": {"pocket_topic_endpoint": "", "pocket_consumer_key": ""}});
+      let BrokenPocketTopicFeed = require("inject!addon/Feeds/PocketTopicsFeed")({"sdk/simplePrefs": {}});
       let brokenInstance = new BrokenPocketTopicFeed();
       brokenInstance.store = {getState() { return reduxState; }};
       reduxState = {Experiments: {values: {pocket: true}}};
@@ -49,7 +49,7 @@ describe("PocketTopicsFeed", () => {
         .then(action => {
           throw new Error("Expected getData to fail with missing configuration");
         }, reason => {
-          assert.include(reason.toString(), "pocket.json");
+          assert.include(reason.toString(), "pocket.topics.endpoint");
         });
     });
   });
