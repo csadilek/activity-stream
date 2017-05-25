@@ -21,8 +21,11 @@ module.exports = class PocketStoriesFeed extends PocketFeed {
       throw new Error(err);
     }
 
-    let pocketUrl = `${pocket_story_endpoint}?consumer_key=${pocket_consumer_key}`;
-    return this.fetch(pocketUrl).then(r => JSON.parse(r).list);
+    let pocketUrl = `${pocket_story_endpoint}`;
+    return this.fetch(pocketUrl).then(r => {
+      let content = JSON.parse(r);
+      return content.list ? content.list : content;
+    });
   }
 
   // XXX Need to remove parenthesis from image URLs as React will otherwise
@@ -44,15 +47,15 @@ module.exports = class PocketStoriesFeed extends PocketFeed {
     return Task.spawn(function*() {
       let stories = yield this._fetchStories();
       stories = stories
-      .filter(s => !PlacesProvider.links.blockedURLs.has(s.dedupe_url))
+      .filter(s => !PlacesProvider.links.blockedURLs.has(s.dedupe_url ? s.dedupe_url : s.url))
       .map(s => ({
         "guid": s.id,
         "recommended": true,
         "title": s.title,
-        "description": s.excerpt,
-        "bestImage": {"url": this._normalizeUrl(s.image_src)},
-        "url": s.dedupe_url,
-        "lastVisitDate": s.published_timestamp,
+        "description": s.excerpt ? s.excerpt : s.summary,
+        "bestImage": {"url": this._normalizeUrl(s.image_src ? s.image_src : s.image)},
+        "url": s.dedupe_url ? s.dedupe_url : s.url,
+        "lastVisitDate": s.published_timestamp ? s.published_timestamp : s.published,
         "pocket": true
       }));
 

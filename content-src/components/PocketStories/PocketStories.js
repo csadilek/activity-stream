@@ -4,8 +4,6 @@ const {justDispatch} = require("common/selectors/selectors");
 const {FormattedMessage} = require("react-intl");
 const {SpotlightItem, renderPlaceholderList} = require("components/Spotlight/Spotlight");
 const {actions} = require("common/action-manager");
-const {pocket_read_more_endpoint, pocket_learn_more_endpoint, pocket_survey_link} = require("../../../pocket.json");
-const {POCKET_TOPICS_LENGTH} = require("common/constants");
 
 const PocketStories = React.createClass({
   onClickFactory(index, story) {
@@ -61,29 +59,6 @@ const PocketStories = React.createClass({
       );
   },
 
-  renderReadMoreTopic(index, topic, url) {
-    return (<li><a key={topic}
-      onClick={this.onTopicClick(index, topic, url)}
-      className="pocket-read-more-link"
-      href={url}>{topic}</a></li>);
-  },
-
-  renderReadMoreTopics() {
-    return (
-      <div className="pocket-read-more">
-        <span><FormattedMessage id="pocket_read_more" /></span>
-        <ul>{this.props.topics.map((t, i) => this.renderReadMoreTopic(i, t.name, t.url))}</ul>
-
-        <a className="pocket-read-even-more"
-           onClick={this.onTopicClick(POCKET_TOPICS_LENGTH, "trending", pocket_read_more_endpoint)}
-           href={pocket_read_more_endpoint}>
-          <FormattedMessage id="pocket_read_even_more" />
-          <span className="pocket-read-even-more-logo" />
-        </a>
-      </div>
-    );
-  },
-
   render() {
     if (this.props.stories.length < 1) {
       console.log("No Pocket stories available."); // eslint-disable-line no-console
@@ -93,36 +68,11 @@ const PocketStories = React.createClass({
     return (<section className="pocket-stories spotlight">
       <h3 className="section-title">
         <FormattedMessage id="header_stories" />
-
-        <span className="section-title-logo" >
-          <a href={pocket_learn_more_endpoint}>
-            <span className="pocket-logo-text">
-              <FormattedMessage id="header_stories_from" />
-            </span>
-            <span className="pocket-logo">
-              <span className="sr-only">Pocket</span>
-            </span>
-          </a>
-          <span className="pocket-info">
-            <span className="sr-only">Info</span>
-            <div className="pocket-feedback-wrapper">
-              <div className="pocket-feedback">
-                <div className="pocket-feedback-header"><FormattedMessage id="pocket_feedback_header" /></div>
-                <p><FormattedMessage id="pocket_feedback_body" /></p>
-                <a href={pocket_survey_link} target="_blank" rel="noopener noreferrer" className="pocket-send-feedback">
-                  <FormattedMessage id="pocket_send_feedback" />
-                </a>
-              </div>
-            </div>
-          </span>
-        </span>
       </h3>
 
       <ul className="spotlight-list">
         {this.props.placeholder ? renderPlaceholderList() : this.renderStories()}
       </ul>
-
-      {this.renderReadMoreTopics()}
     </section>);
   }
 });
