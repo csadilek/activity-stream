@@ -34,6 +34,7 @@ XPCOMUtils.defineLazyGetter(this, "EventEmitter", () => {
 });
 
 XPCOMUtils.defineLazyModuleGetter(this, "Pocket", "chrome://pocket/content/Pocket.jsm");
+XPCOMUtils.defineLazyModuleGetter(this, "pktApi", "chrome://pocket/content/pktApi.jsm");
 
 const DEFAULT_OPTIONS = {
   pageURL: self.data.url("content/activity-streams.html"),
@@ -97,6 +98,7 @@ function ActivityStreams(metadataStore, tabTracker, telemetrySender, options = {
   this._store = createStore({middleware: this._feeds.reduxMiddleware});
   this._feeds.connectStore(this._store);
   this.browser = getCurrentBrowser();
+  this._pocketItems = new Map();
 }
 
 ActivityStreams.prototype = {
@@ -244,7 +246,20 @@ ActivityStreams.prototype = {
         PlacesProvider.links.unblockURL(msg.data);
         break;
       case am.type("NOTIFY_SAVE_TO_POCKET"):
-        Pocket.savePage(this.browser, msg.data.url, msg.data.title);
+        if (pktApi.isUserLoggedIn()) {
+          let items = this._pocketItems;
+          pktApi.addLink(msg.data.site.url, resp => {
+            items.set(msg.data.site.guid, resp.item.item_id);
+              // TODO trigger style change
+          });
+        } else {
+          // This will show the pocket panel / introduction and allow users to log in
+          Pocket.savePage(this.browser, msg.data.url, msg.data.title);
+        }
+        break;
+      case am.type("NOTIFY_REMOVE_FROM_POCKET"):
+        // TODO trigger style change}
+        pktApi.deleteItem(this._pocketItems.get(msg.data.guid), resp => {});
         break;
     }
   },

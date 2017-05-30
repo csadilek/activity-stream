@@ -27,6 +27,7 @@ const LinkMenu = React.createClass({
       dispatch(actions.NotifyEvent(payload));
     }
   },
+
   getOptions() {
     const {site, allowBlock, dispatch, prefs, index} = this.props;
     const isNotDefault = site.type !== FIRST_RUN_TYPE;
@@ -78,7 +79,18 @@ const LinkMenu = React.createClass({
               pocket: 0,
               tiles: [{id: site.guid, pos: index}]
             }));
-            dispatch(actions.NotifySaveToPocket(site.url, site.title));
+            dispatch(actions.NotifySaveToPocket(site));
+          }
+        },
+        {type: "separator"},
+        // TODO remove this / for testing purposes only
+        {
+          ref: "removeFromPocket",
+          label: "Remove From Pocket",
+          icon: "pocket",
+          userEvent: "REMOVE_FROM_POCKET",
+          onClick: () => {
+            dispatch(actions.NotifyRemoveFromPocket(site.guid));
           }
         },
         {type: "separator"}

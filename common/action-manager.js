@@ -33,6 +33,7 @@ const am = new ActionManager([
   "NOTIFY_PREF_CHANGE",
   "NOTIFY_REMOVE_FORM_HISTORY_ENTRY",
   "NOTIFY_SAVE_TO_POCKET",
+  "NOTIFY_REMOVE_FROM_POCKET",
   "NOTIFY_UNBLOCK_URL",
   "NOTIFY_UNDESIRED_EVENT",
   "NOTIFY_UNPIN_TOPSITE",
@@ -64,7 +65,8 @@ const am = new ActionManager([
   "POCKET_TOPICS_REQUEST",
   "POCKET_TOPICS_RESPONSE",
   "SYSTEM_TICK",
-  "SAVE_TO_POCKET"
+  "SAVE_TO_POCKET",
+  "REMOVE_FROM_POCKET"
 ]);
 
 /**
@@ -252,8 +254,12 @@ function NotifyUnpinTopsite(site) {
   return Notify("NOTIFY_UNPIN_TOPSITE", {site});
 }
 
-function NotifySaveToPocket(url, title) {
-  return Notify("NOTIFY_SAVE_TO_POCKET", {url, title});
+function NotifySaveToPocket(site) {
+  return Notify("NOTIFY_SAVE_TO_POCKET", {site});
+}
+
+function NotifyRemoveFromPocket(guid) {
+  return Notify("NOTIFY_REMOVE_FROM_POCKET", {guid});
 }
 
 function RequestAddTopsite(url, title) {
@@ -289,6 +295,7 @@ am.defineActions({
   NotifyPrefChange,
   NotifyRemoveFormHistory,
   NotifySaveToPocket,
+  NotifyRemoveFromPocket,
   NotifyUnblockURL,
   NotifyUndesiredEvent,
   NotifyUnpinTopsite,
