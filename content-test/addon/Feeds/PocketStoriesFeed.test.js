@@ -60,5 +60,22 @@ describe("PocketStoriesFeed", () => {
           assert.include(reason.toString(), "pocket.json");
         });
     });
+    it("should mark stories as new", () => {
+      instance._fetchStories = sinon.mock().returns([
+        {"published_timestamp": Date.now() / 1000},
+        {"published_timestamp": "0"},
+        {"published_timestamp": (Date.now() - 2 * 24 * 60 * 60 * 1000) / 1000}]);
+      reduxState = {Experiments: {values: {pocket: true}}};
+      return instance.getData()
+        .then(action => {
+          assert.isObject(action);
+          assert.equal(action.type, "POCKET_STORIES_RESPONSE");
+          assert.calledOnce(instance._fetchStories);
+          assert.lengthOf(action.data, 3);
+          assert.isTrue(action.data[0].new);
+          assert.isFalse(action.data[1].new);
+          assert.isFalse(action.data[2].new);
+        });
+    });
   });
 });

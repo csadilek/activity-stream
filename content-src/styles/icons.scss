@@ -126,6 +126,10 @@
     background-image: url('#{$image-path}trending-icon.svg');
   }
 
+  &.icon-new {
+    background-image: url('#{$image-path}trending-icon.svg');
+  }
+
   &.icon-arrowhead-down {
     background-image: url('#{$image-path}glyph-arrowhead-down-12.svg');
     height: 12px;

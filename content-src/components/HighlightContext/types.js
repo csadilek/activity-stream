@@ -19,8 +19,12 @@ module.exports = {
     intlID: "type_label_topic",
     icon: "topic"
   },
-  stories: {
+  top_story_trending: {
     intlID: "type_label_recommended",
     icon: "trending"
+  },
+  top_story_new: {
+    intlID: "type_label_new",
+    icon: "new"
   }
 };

@@ -47,7 +47,8 @@ module.exports = class PocketStoriesFeed extends PocketFeed {
       .filter(s => !PlacesProvider.links.blockedURLs.has(s.dedupe_url))
       .map(s => ({
         "guid": s.id,
-        "recommended": true,
+        "trending": true,
+        "new": (Date.now() - (s.published_timestamp * 1000)) <= 24 * 60 * 60 * 1000,
         "title": s.title,
         "description": s.excerpt,
         "bestImage": {"url": this._normalizeUrl(s.image_src)},

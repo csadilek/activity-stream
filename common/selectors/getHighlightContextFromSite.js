@@ -27,8 +27,10 @@ module.exports = function getHighlightContextFromSite(site) {
   } else if (site.isOpen) {
     result.type = "open";
     result.date = site.lastVisitDate;
-  } else if (site.recommended) {
-    result.type = "stories";
+  } else if (site.new) {
+    result.type = "top_story_new";
+  } else if (site.trending) {
+    result.type = "top_story_trending";
   } else {
     result.type = "history";
     result.date = site.lastVisitDate;
