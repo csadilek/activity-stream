@@ -89,7 +89,13 @@ this.DefaultPrefs = class DefaultPrefs {
       } else {
         value = prefConfig.value;
       }
-      this.setDefaultPref(pref, value);
+
+      if (this.branch.getPrefType(pref) === Services.prefs.PREF_INVALID) {
+        Cu.reportError(`SETTING DEFAULT VALUE FOR PREF: ${pref} ${value}`);
+        this.setDefaultPref(pref, value);
+      } else {
+        Cu.reportError(`VALUE FOR PREF EXISTS: ${pref}`);
+      }
     }
   }
 
