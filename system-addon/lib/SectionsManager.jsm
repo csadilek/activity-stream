@@ -40,6 +40,23 @@ const BUILT_IN_SECTIONS = {
     order: 0,
     dedupeFrom: ["highlights"]
   }),
+  "feeds.section.mypocket": options => ({
+    id: "mypocket",
+    pref: {
+      titleString: "My Pocket",
+      descString: "Links you have pocketed."
+    },
+    eventSource: "MY_POCKET",
+    icon: "pocket",
+    title: "My Pocket",
+    maxRows: 1,
+    availableContextMenuOptions: ["CheckBookmark", "RemoveFromPocket", "Separator", "OpenInNewWindow", "OpenInPrivateWindow", "Separator", "BlockUrl"],
+    emptyState: {
+      message: {id: "topstories_empty_state", values: {provider: "pocket"}},
+      icon: "check"
+    },
+    order: 1
+  }),
   "feeds.section.highlights": options => ({
     id: "highlights",
     pref: {
@@ -57,7 +74,7 @@ const BUILT_IN_SECTIONS = {
       icon: "highlights"
     },
     shouldSendImpressionStats: false,
-    order: 1
+    order: 2
   })
 };
 

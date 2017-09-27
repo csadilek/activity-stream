@@ -22,6 +22,7 @@ const {SystemTickFeed} = Cu.import("resource://activity-stream/lib/SystemTickFee
 const {TelemetryFeed} = Cu.import("resource://activity-stream/lib/TelemetryFeed.jsm", {});
 const {TopSitesFeed} = Cu.import("resource://activity-stream/lib/TopSitesFeed.jsm", {});
 const {TopStoriesFeed} = Cu.import("resource://activity-stream/lib/TopStoriesFeed.jsm", {});
+const {MyPocketFeed} = Cu.import("resource://activity-stream/lib/MyPocketFeed.jsm", {});
 const {HighlightsFeed} = Cu.import("resource://activity-stream/lib/HighlightsFeed.jsm", {});
 
 const DEFAULT_SITES = new Map([
@@ -67,6 +68,13 @@ const PREFS_CONFIG = new Map([
       topics_endpoint: `https://getpocket.cdn.mozilla.net/v3/firefox/trending-topics?version=2&consumer_key=$apiKey&locale_lang=${args.locale}`,
       show_spocs: false,
       personalized: false
+    })
+  }],
+  ["feeds.section.mypocket.options", {
+    title: "Configuration options for my pocket feed",
+    value: JSON.stringify({
+      api_key_pref: "extensions.pocket.oAuthConsumerKey",
+      api_endpoint: "https://getpocket.com/v3/get?consumer_key=$apiKey&access_token=$accessToken&detailType=complete"
     })
   }],
   ["filterAdult", {
@@ -181,6 +189,12 @@ const FEEDS_DATA = [
       })[geo];
       return !!locales && locales.includes(locale);
     }
+  },
+  {
+    name: "section.mypocket",
+    factory: () => new MyPocketFeed(),
+    title: "Fetches pocketed links",
+    value: true
   },
   {
     name: "snippets",

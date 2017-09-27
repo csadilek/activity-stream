@@ -107,6 +107,15 @@ module.exports = {
     }),
     userEvent: "SAVE_TO_POCKET"
   }),
+  RemoveFromPocket: (site, index, eventSource) => ({
+    id: "Remove from Pocket",
+    icon: "pocket",
+    action: ac.SendToMain({
+      type: at.REMOVE_FROM_POCKET,
+      data: {site: {guid: site.guid, url: site.url}}
+    }),
+    userEvent: "REMOVE_FROM_POCKET"
+  }),
   EditTopSite: site => ({
     id: "edit_topsites_button_text",
     icon: "edit",
