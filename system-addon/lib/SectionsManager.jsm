@@ -9,7 +9,6 @@ ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 const {actionCreators: ac, actionTypes: at} = ChromeUtils.import("resource://activity-stream/common/Actions.jsm", {});
 
 ChromeUtils.defineModuleGetter(this, "PlacesUtils", "resource://gre/modules/PlacesUtils.jsm");
-ChromeUtils.defineModuleGetter(this, "PrivateBrowsingUtils", "resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 /*
  * Generators for built in sections, keyed by the pref name for their feed.
@@ -191,14 +190,8 @@ const SectionsManager = {
    */
   updateLinkMenuOptions(options) {
     if (options.availableLinkMenuOptions) {
-      options.contextMenuOptions = options.availableLinkMenuOptions.filter(option => {
-        let rv = !this.CONTEXT_MENU_PREFS[option] || Services.prefs.getBoolPref(this.CONTEXT_MENU_PREFS[option]);
-        // Special-case the 'open in a private window' context menu
-        if (rv && option === "OpenInPrivateWindow") {
-          return PrivateBrowsingUtils.enabled;
-        }
-        return rv;
-      });
+      options.contextMenuOptions = options.availableLinkMenuOptions.filter(
+        o => !this.CONTEXT_MENU_PREFS[o] || Services.prefs.getBoolPref(this.CONTEXT_MENU_PREFS[o]));
     }
   },
 

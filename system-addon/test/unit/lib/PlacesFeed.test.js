@@ -42,6 +42,7 @@ describe("PlacesFeed", () => {
         SOURCES
       }
     });
+    globals.set("PrivateBrowsingUtils", {enabled: true});
     global.Cc["@mozilla.org/browser/nav-history-service;1"] = {
       getService() {
         return global.PlacesUtils.history;
@@ -150,6 +151,24 @@ describe("PlacesFeed", () => {
       assert.equal(url, "foo.com");
       assert.equal(where, "window");
       assert.propertyVal(params, "private", true);
+    });
+    it("should call openLinkIn with the correct args on OPEN_PRIVATE_WINDOW if private browsing disabled", () => {
+      globals.set("PrivateBrowsingUtils", {enabled: false});
+
+      const openLinkIn = sinon.stub();
+      const openWindowAction = {
+        type: at.OPEN_PRIVATE_WINDOW,
+        data: {url: "foo.com"},
+        _target: {browser: {ownerGlobal: {openLinkIn}}}
+      };
+
+      feed.onAction(openWindowAction);
+
+      assert.calledOnce(openLinkIn);
+      const [url, where, params] = openLinkIn.firstCall.args;
+      assert.equal(url, "about:privatebrowsing");
+      assert.equal(where, "window");
+      assert.propertyVal(params, "triggeringPrincipal", null);
     });
     it("should open link on OPEN_LINK", () => {
       const openLinkIn = sinon.stub();
